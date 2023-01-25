@@ -1,0 +1,25 @@
+{
+  "name": "tafatt-backend",
+  "version": "1.0.0",
+  "description": "backend for the tafatt app",
+  "main": "index.js",
+  "scripts": {
+    "test": "dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dodisbeaver/tafatt-backend.git"
+  },
+  "author": "dodisbeaver",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dodisbeaver/tafatt-backend/issues"
+  },
+  "homepage": "https://github.com/Dodisbeaver/tafatt-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20",
+    "socket.io": "^4.5.4"
+  }
+}
