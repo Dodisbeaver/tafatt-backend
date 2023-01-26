@@ -4,7 +4,8 @@
   "description": "backend for the tafatt app",
   "main": "index.js",
   "scripts": {
-    "test": "dev"
+    "test": "nodemon index.js",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
