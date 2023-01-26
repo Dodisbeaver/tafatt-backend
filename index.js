@@ -35,11 +35,6 @@ let tasks = {
                 comments: [],
                 reward: 5
             },
-        ],
-    },
-    pending: {
-        title: "pending",
-        items: [
             {
                 id: fetchID(),
                 username: "Quartermaster",
