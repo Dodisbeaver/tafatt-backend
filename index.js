@@ -17,66 +17,63 @@ app.use(express.json());
 
 const fetchID = () => Math.random().toString(36).substring(2, 10);
 
-let tasks = {
-    pending: {
+let tasks = [
+    [{
+        
+        id: fetchID(),
         title: "pending",
-        id: fetchID(),
-        items: [
-            {
-                id: fetchID(),
-                username: "Ninja Kitten",
-                title: "Take out trash",
-                comments: [],
-                reward: 5
-            },
-            {
-                id: fetchID(),
-                username: "Quartermaster",
-                title: "Buy groceries",
-                comments: [],
-                reward: 5
-            },
-        ],
+        username: "Ninja Kitten",
+        task: "Take out trash",
+        comments: [],
+        reward: 5
     },
-    ongoing: {
-        title: "ongoing",
+    {   
+        
         id: fetchID(),
-        items: [
+        title: "pending",
+        username: "Quartermaster",
+        task: "Buy groceries",
+        comments: [],
+        reward: 5
+    },
+    ],
+    
+    [
+    {
+       
+        id: fetchID(),  
+        title: "ongoing", 
+        username: "Dragon Slayer",
+        task: "Do homework",
+        comments: [
             {
+                name: "Quartermaster",
+                text: "Remember to read chapter 2-3",
                 id: fetchID(),
-                username: "Dragon Slayer",
-                title: "Do homework",
-                comments: [
-                    {
-                        name: "Quartermaster",
-                        text: "Remember to read chapter 2-3",
-                        id: fetchID(),
-                    },
+            },
                 ],
-                reward: 10
-            },
-        ],
-    },
-    completed: {
+        reward: 10
+            
+        
+    },],
+    [{
+        
+        id: fetchID(),
         title: "completed",
-        id: fetchID(),
-        items: [
+        username: "Ninja Kitten",
+        task: "Do homework",
+        comments: [
             {
-                id: fetchID(),
-                username: "Ninja Kitten",
-                title: "Do homework",
-                comments: [
-                    {
-                        name: "Quartermaster",
-                        text: "Good job!",
-                        id: fetchID(),
-                    },
-                ],
-                reward: 10
+            name: "Quartermaster",
+            text: "Good job!",
+            id: fetchID(),
             },
-        ],
-    },
-};
+                ],
+        reward: 10
+        
+    },]
+];
+
 app.get("/", (req, res) => {
     res.json({
 
@@ -89,8 +86,9 @@ socketIO.on("connection", (socket) => {
 	console.log(`⚡: ${socket.id} user just connected!`);
 
 	socket.on("createTask", (data) => {
-		const newTask = { id: fetchID(), title: data.task, comments: [] };
-		tasks["pending"].items.push(newTask);
+        console.log(data)
+		const newTask = { id: fetchID(), username: "New Task", title: "pending", comments: [], task: data.task };
+		tasks[0].push(newTask);
 		socket.emit("tasks", tasks);
 
 		// 👇🏻 sends notification via Novu
@@ -98,19 +96,21 @@ socketIO.on("connection", (socket) => {
 	});
 
 	socket.on("taskDragged", (data) => {
+        console.log(data)
 		const { source, destination } = data;
+        console.log(source.index)
 		const itemMoved = {
-			...tasks[source.droppableId].items[source.index].id,
+			...tasks[source.index].id,
 		};
 		console.log("ItemMoved>>> ", itemMoved);
-		tasks[source.droppableId].items.splice(source.index, 1);
-		tasks[destination.droppableId].items.splice(
+		tasks[source.droppableId].splice(source.index, 1);
+		tasks[destination.droppableId].splice(
 			destination.index,
 			0,
 			itemMoved
 		);
-		console.log("Source >>>", tasks[source.droppableId].items);
-		console.log("Destination >>>", tasks[destination.droppableId].items);
+		console.log("Source >>>", tasks[source.droppableId]);
+		console.log("Destination >>>", tasks[destination.droppableId]);
 		socket.emit("tasks", tasks);
 	});
 
@@ -143,6 +143,7 @@ socketIO.on("connection", (socket) => {
 
 app.get("/api", (req, res) => {
 	res.json(tasks);
+    // console.log(tasks)
 });
 
 http.listen(PORT, () => {
