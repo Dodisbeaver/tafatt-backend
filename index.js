@@ -1,8 +1,16 @@
 const express = require("express");
+const mongoose = require('mongoose');
 const app = express();
 const cors = require("cors");
 const http = require("http").Server(app);
-const PORT = 4000;
+require('dotenv').config();
+const PORT = process.env.PORT || 4001;
+console.log(process.env.DOTENV_WORKS);
+
+mongoose.connect(process.env.DB_URL);
+const db = mongoose.connection;
+db.on('error', (error) => console.log(error));
+db.on('open', () => console.log('Connected to DB'));
 // const { Novu } = require("@novu/node");
 // const novu = new Novu(<API_KEY>);
 const socketIO = require("socket.io")(http, {
@@ -15,6 +23,7 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+const taskRouter = require('./routes/tasks');
 const fetchID = () => Math.random().toString(36).substring(2, 10);
 
 let tasks = [
