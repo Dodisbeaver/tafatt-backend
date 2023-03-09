@@ -20,12 +20,15 @@ const socketIO = require("socket.io")(http, {
 });
 
 app.use(cors());
+
+const taskRouter = require('./routes/tasks');
+const boardRouter = require('./routes/boards');
+const fetchID = () => Math.random().toString(36).substring(2, 10);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const taskRouter = require('./routes/tasks');
-const fetchID = () => Math.random().toString(36).substring(2, 10);
-
+app.use('/tasks', taskRouter)
+app.use('/boards', boardRouter)
 let tasks = [
     [{
         
